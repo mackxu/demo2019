@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>debounce - throttle</title>
+</head>
+<body>
+<style type="text/css">
+  #container {
+    height: 200px;
+    width: 400px;
+    line-height: 200px;
+    text-align: center;
+    background-color: #ccc;
+  }
+</style>
+<div id="container"></div>
+<script type="text/javascript" src="debounce.js"></script>
+<script type="text/javascript" src="throttle.js"></script>
+<script type="text/javascript">
+  var count = 1;
+  var container = document.getElementById('container')
+  function getUserAction(event) {
+    console.log(event)
+    console.log(this)
+    this.innerHTML = count++
+  }
+  container.onmousemove = throttle(getUserAction, 1000, { leading: true, trailing: true });
+</script>
+</body>
+</html>
