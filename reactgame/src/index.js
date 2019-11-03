@@ -2,37 +2,43 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-// class Square extends Component {
-//   render() {
-//     return (
-//       <button 
-//         className="square" 
-//         onClick={() => this.props.onClick()}
-//       >
-//         { this.props.children }
-//       </button>
-//     );
-//   }
-// }
-
-function Square(props) {
-  return (
-    <button 
-      className="square"
-      onClick={props.onClick}
-    >
-      { props.children }
-    </button>
-  );
+class Square extends Component {
+  shouldComponentUpdate(nextProps) {
+    return this.props.value !== nextProps.value;
+  }
+  componentDidUpdate() {
+    console.log(this.props.value);
+  }
+  render() {
+    return (
+      <button 
+        className="square" 
+        onClick={this.props.onClick}
+      >
+        { this.props.value }
+      </button>
+    );
+  }
 }
 
-class Board extends Component { 
+// function Square(props) {
+//   return (
+//     <button 
+//       className="square"
+//       onClick={props.onClick}
+//     >
+//       { props.children }
+//     </button>
+//   );
+// }
+
+class Board extends Component {
+  componentDidUpdate() {
+    console.log('Component, Board');
+  }
   renderSquare(i) {
-    const { squares, onClick } = this.props;
     return (
-      <Square onClick={() => onClick(i)}>
-        {squares[i]}
-      </Square>
+      <Square onClick={this.props.onClick.bind(this, i)} value={this.props.squares[i]} />
     );
   }
   render() {
@@ -82,6 +88,7 @@ class Game extends Component {
     });
   }
   jumpTo = (index) => {
+    // this.props 和 this.state 可能会异步更新，所以你不要依赖他们的值来更新下一个状态。
     this.setState({
       history: this.state.history.slice(0, index + 1),
       xIsNext: index % 2 === 0,
