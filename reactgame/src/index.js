@@ -1,10 +1,14 @@
-import React, { Component } from 'react';
+import React, { Component, PureComponent } from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
 
-class Square extends Component {
-  shouldComponentUpdate(nextProps) {
-    return this.props.value !== nextProps.value;
+class Square extends PureComponent {
+  // shouldComponentUpdate(nextProps) {
+  //   return this.props.value !== nextProps.value;
+  // }
+  handleClick = () => {
+    const { idx, onClick } = this.props;
+    onClick(idx);
   }
   componentDidUpdate() {
     console.log(this.props.value);
@@ -13,7 +17,7 @@ class Square extends Component {
     return (
       <button 
         className="square" 
-        onClick={this.props.onClick}
+        onClick={this.handleClick}
       >
         { this.props.value }
       </button>
@@ -37,8 +41,9 @@ class Board extends Component {
     console.log('Component, Board');
   }
   renderSquare(i) {
+    const { onClick, squares } = this.props;
     return (
-      <Square onClick={this.props.onClick.bind(this, i)} value={this.props.squares[i]} />
+      <Square key={i} idx={i} onClick={onClick} value={squares[i]} />
     );
   }
   render() {
@@ -65,13 +70,10 @@ class Board extends Component {
 }
 
 class Game extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      history: [Array(9).fill(null)],
-      stepNumber: 0,
-      xIsNext: true,
-    };
+  state = {
+    history: [Array(9).fill(null)],
+    stepNumber: 0,
+    xIsNext: true,
   }
   handleClick = (i) => {
     const { xIsNext, stepNumber } = this.state;
